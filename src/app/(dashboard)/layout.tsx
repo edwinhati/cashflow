@@ -3,21 +3,11 @@
 import { usePathname } from "next/navigation";
 import Header from "@/components/navigations/header";
 import Sidebar from "@/components/navigations/sidebar";
-import type { LucideProps } from "lucide-react";
-import { ForwardRefExoticComponent } from "react";
-
+import type { Navigation } from "@/types/navigation";
 import { Home } from "lucide-react";
 
-interface NavigationProps {
-  navigation: {
-    name: string;
-    href: string;
-    current?: boolean;
-    icon: ForwardRefExoticComponent<LucideProps>;
-  }[];
-}
 
-const navigation: NavigationProps["navigation"] = [
+const navigation: Navigation[] = [
   { name: "Home", href: "/", icon: Home },
 ];
 
