@@ -19,7 +19,7 @@ export default function DashboardLayout({
   const pathname = usePathname();
 
   navigation.map((item) => {
-    item.current = pathname.toLowerCase().includes(item.name.toLowerCase());
+    item.current = item.href === pathname;
   });
 
   return (
