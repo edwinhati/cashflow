@@ -5,6 +5,7 @@ import {
   text,
   decimal,
   timestamp,
+  boolean,
 } from "drizzle-orm/pg-core";
 
 export const categoryTypeEnum = pgEnum("type", ["expense", "income"]);
@@ -15,6 +16,7 @@ export const user = pgTable("users", {
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
   currency: text("currency").notNull().default("USD"),
+  is_verified: boolean("is_verified").notNull().default(false),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
