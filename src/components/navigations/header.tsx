@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import Link from "next/link";
 import Image from "next/image";
-import { Search, PanelLeft, LucideProps } from "lucide-react";
+import { Search, PanelLeft } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -21,24 +21,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { createElement, ForwardRefExoticComponent } from "react";
+import { createElement } from "react";
 import { ModeToggle } from "../utils/mode-toggle";
-
-interface NavigationProps {
-  navigation: {
-    name: string;
-    href: string;
-    current?: boolean;
-    icon: ForwardRefExoticComponent<LucideProps>;
-  }[];
-}
+import type { Navigation } from "@/types/navigation";
 
 export default function Header({
   pathname,
   navigation,
 }: {
   pathname: string;
-  navigation: NavigationProps["navigation"];
+  navigation: Navigation[];
 }) {
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
