@@ -16,6 +16,9 @@ import {
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { login } from "@/features/supabase/hooks";
+import { useState } from "react";
+import { LoaderCircle } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -27,9 +30,25 @@ export default function SignIn() {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setLoading(true);
+    const response = await login(values.email, values.password);
+    const { error } = response || {};
+
+    if (error) {
+      setLoading(false);
+      form.setError("email", {
+        type: "manual",
+        message: error as string,
+      });
+      form.setError("password", {
+        type: "manual",
+        message: error as string,
+      });
+    }
   };
+
+  const [loading, setLoading] = useState(false);
 
   return (
     <>
@@ -84,9 +103,15 @@ export default function SignIn() {
               Forgot your password?
             </Link>
           </div>
-          <Button type="submit" className="w-full">
-            Login
-          </Button>
+          {loading ? (
+            <Button className="w-full" disabled>
+              <LoaderCircle className="animate-spin" />
+            </Button>
+          ) : (
+            <Button type="submit" className="w-full">
+              Login
+            </Button>
+          )}
         </form>
       </Form>
     </>
