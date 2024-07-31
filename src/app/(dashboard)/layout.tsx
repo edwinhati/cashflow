@@ -4,11 +4,12 @@ import { usePathname } from "next/navigation";
 import Header from "@/components/navigations/header";
 import Sidebar from "@/components/navigations/sidebar";
 import type { Navigation } from "@/types/navigation";
-import { Home } from "lucide-react";
+import { Home, Table } from "lucide-react";
 
 
 const navigation: Navigation[] = [
   { name: "Home", href: "/", icon: Home },
+  { name: "Transaction", href: "/transaction", icon: Table },
 ];
 
 export default function DashboardLayout({
