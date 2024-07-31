@@ -199,6 +199,7 @@ export default function Home() {
               <Card x-chunk="dashboard-05-chunk-3">
                 <CardHeader className="px-7">
                   <CardTitle>Cashflow</CardTitle>
+                  {/* eslint-disable-next-line react/no-unescaped-entities */}
                   <CardDescription>This week's cashflow</CardDescription>
                 </CardHeader>
                 <CardContent>
