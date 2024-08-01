@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import Link from "next/link";
 import { ModeToggle } from "../utils/mode-toggle";
-import { Package2, Settings, LucideProps } from "lucide-react";
+import { Package2, Settings } from "lucide-react";
 
 import {
   Tooltip,
@@ -9,18 +9,10 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip";
-import { createElement, ForwardRefExoticComponent } from "react";
+import { createElement } from "react";
+import type { Navigation } from "@/types/navigation";
 
-interface NavigationProps {
-  navigation: {
-    name: string;
-    href: string;
-    current?: boolean;
-    icon: ForwardRefExoticComponent<LucideProps>;
-  }[];
-}
-
-function Sidebar({ navigation }: NavigationProps) {
+function Sidebar({ navigation }: { navigation: Navigation[] }) {
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
       <TooltipProvider>
