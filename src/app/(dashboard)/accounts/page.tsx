@@ -1,4 +1,5 @@
-import { Account, columns } from "@/features/account/components/columns";
+import { columns } from "@/features/account/components/columns";
+import type { Account } from "@/features/account/types/account";
 import { DataTable } from "@/features/account/components/data-table";
 
 async function getData(): Promise<Account[]> {

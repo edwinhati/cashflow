@@ -7,24 +7,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "../data-table/header";
-
-type Currency = {
-  name: string;
-  locales: string;
-};
-
-export type Account = {
-  id: string;
-  name: string;
-  balance: number;
-  currency: Currency;
-};
+import type { Account } from "@/features/account/types/account";
+import type { Currency } from "@/features/account/types/currency";
 
 export const columns: ColumnDef<Account>[] = [
   {
