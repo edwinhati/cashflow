@@ -1,6 +1,6 @@
 import { columns } from "@/features/account/components/columns";
 import type { Account } from "@/features/account/types/account";
-import { DataTable } from "@/features/account/components/data-table";
+import { DataTable } from "@/components/data-table";
 
 async function getData(): Promise<Account[]> {
   // Fetch data from your API here.
@@ -49,11 +49,11 @@ async function getData(): Promise<Account[]> {
         locales: "id-ID",
       },
       balance: 5000,
-    }
+    },
   ];
 }
 
-export default async function DemoPage() {
+export default async function AccountsPage() {
   const data = await getData();
 
   return (

@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
-import { DataTableColumnHeader } from "../data-table/header";
+import { DataTableColumnHeader } from "../../../../components/data-table/header";
 import type { Account } from "@/features/account/types/account";
 import type { Currency } from "@/features/account/types/currency";
 
