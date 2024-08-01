@@ -20,13 +20,13 @@ export async function login(email: string, password: string) {
   }
 
   if (data) {
-    const isVerified = await checkVerification(data.user?.id);
+    const isVerified = await checkVerification(data.user?.id, false, true);
     if (!isVerified) {
       return;
     }
   }
 
-  revalidatePath("/", "layout");
+  await revalidatePath("/");
   redirect("/");
 }
 
@@ -57,13 +57,13 @@ export async function signup(email: string, password: string, name: string) {
         is_verified: process.env.DEFAULT_VERIFIED === "true",
       })
       .execute();
-    const isVerified = await checkVerification(data.user?.id);
+    const isVerified = await checkVerification(data.user?.id, false, true);
     if (!isVerified) {
       return;
     }
   }
 
-  revalidatePath("/", "layout");
+  await revalidatePath("/");
   redirect("/");
 }
 
@@ -72,33 +72,49 @@ export async function logout() {
 
   await supabase.auth.signOut();
 
-  revalidatePath("/", "layout");
+  await revalidatePath("/");
   redirect("/");
 }
 
-async function checkVerification(id?: string) {
+export async function checkVerification(
+  id?: string,
+  isSignOut?: boolean,
+  isRedirect?: boolean
+) {
   if (!id) {
-    await handleUnverifiedUser();
+    await handleUnverifiedUser(isSignOut, isRedirect);
     return false;
   }
 
-  const result = await postgres
-    .select()
-    .from(user)
-    .where(eq(user.id, id))
-    .execute();
+  try {
+    const result = await postgres
+      .select()
+      .from(user)
+      .where(eq(user.id, id))
+      .execute();
 
-  if (result.at(0)?.is_verified) {
-    return true;
-  } else {
-    await handleUnverifiedUser();
+    if (result.length > 0 && result[0].is_verified) {
+      return true;
+    } else {
+      await handleUnverifiedUser(isSignOut, isRedirect);
+      return false;
+    }
+  } catch (error) {
+    console.error("Error checking user verification:", error);
+    await handleUnverifiedUser(isSignOut, isRedirect);
     return false;
   }
 }
 
-async function handleUnverifiedUser() {
+async function handleUnverifiedUser(isSignOut?: boolean, isRedirect?: boolean) {
   const supabase = createClient();
-  await supabase.auth.signOut();
-  revalidatePath("/", "layout");
-  redirect("/not-verified");
+
+  if (isSignOut) {
+    await supabase.auth.signOut();
+  }
+
+  if (isRedirect) {
+    await revalidatePath("/");
+    redirect("/not-verified");
+  }
 }

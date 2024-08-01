@@ -24,6 +24,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { createElement } from "react";
 import { ModeToggle } from "../utils/mode-toggle";
 import type { Navigation } from "@/types/navigation";
+import { logout } from "@/features/supabase/hooks";
 
 export default function Header({
   pathname,
@@ -105,7 +106,7 @@ export default function Header({
           <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuItem>Support</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Logout</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => logout()}>Logout</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </header>

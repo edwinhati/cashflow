@@ -27,6 +27,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { createClient } from "@/features/supabase/lib/server";
+import { checkVerification } from "@/features/supabase/hooks";
+import { redirect } from "next/navigation";
 
 const transactions = [
   {
@@ -101,7 +104,21 @@ const transactions = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error || !data?.user) {
+    redirect("/login");
+    return;
+  }
+
+  const isVerified = await checkVerification(data.user.id, false, true);
+  if (!isVerified) {
+    return;
+  }
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
