@@ -1,6 +1,6 @@
 import { columns } from "@/features/account/components/columns";
 import type { Account } from "@/features/account/types/account";
-import { DataTable } from "@/components/data-table";
+import { DataTable } from "@/features/account/components/data-table";
 
 async function getData(): Promise<Account[]> {
   // Fetch data from your API here.
