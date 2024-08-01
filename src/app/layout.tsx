@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { ThemeProvider } from "./provider";
 import { Inter as FontSans } from "next/font/google";
+import { ThemeProvider, TrpcProvider } from "./provider";
 
 import { cn } from "@/utils";
 
@@ -30,14 +30,16 @@ export default function RootLayout({
         )}
       >
         <div id="__next">
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
+          <TrpcProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+            </ThemeProvider>
+          </TrpcProvider>
         </div>
       </body>
     </html>
