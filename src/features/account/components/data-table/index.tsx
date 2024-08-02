@@ -21,27 +21,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
+import { trpc } from "@/utils/trpc";
 import { Input } from "@/components/ui/input";
 import { DataTablePagination } from "@/components/data-table/pagination";
 import { DataTableViewOptions } from "@/components/data-table/view-options";
+import { columns } from "../columns";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-}
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
+  const accounts = trpc.account.findMany.useQuery();
+
   const table = useReactTable({
-    data,
-    columns,
+    data: (accounts.data as TData[]) ?? [],
+    columns: columns as ColumnDef<TData, TValue>[],
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
@@ -61,14 +58,14 @@ export function DataTable<TData, TValue>({
   return (
     <>
       <div className="flex items-center py-4">
-          <Input
-            placeholder="Filter accounts..."
-            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("name")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
+        <Input
+          placeholder="Filter accounts..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("name")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
         <DataTableViewOptions table={table} />
       </div>
       <div className="rounded-md border">
