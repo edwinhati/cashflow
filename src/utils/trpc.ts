@@ -1,6 +1,7 @@
 import { createTRPCNext } from "@trpc/next";
 import { httpBatchLink } from "@trpc/client";
 import type { AppRouter } from "@/lib/trpc/server";
+import { ssrPrepass } from "@trpc/next/ssrPrepass";
 
 function getBaseUrl() {
   if (typeof window !== "undefined")
@@ -21,6 +22,8 @@ function getBaseUrl() {
 
 export const trpc = createTRPCNext<AppRouter>({
   config(opts) {
+    const { ctx } = opts;
+
     return {
       links: [
         httpBatchLink({
@@ -32,10 +35,16 @@ export const trpc = createTRPCNext<AppRouter>({
 
           // You can pass any HTTP headers you wish here
           async headers() {
+            if (!ctx?.req?.headers) {
+              return {};
+            }
+            // To use SSR properly, you need to forward client headers to the server
+            // This is so you can pass through things like cookies when we're server-side rendering
             return {
-              // authorization: getAuthCookie(),
+              cookie: ctx.req.headers.cookie,
             };
           },
+          
         }),
       ],
     };
@@ -43,5 +52,6 @@ export const trpc = createTRPCNext<AppRouter>({
   /**
    * @link https://trpc.io/docs/v11/ssr
    **/
-  ssr: false,
+  ssr: true,
+  ssrPrepass,
 });

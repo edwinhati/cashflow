@@ -7,18 +7,13 @@ import Sidebar from "@/components/navigations/sidebar";
 import type { Navigation } from "@/types/navigation";
 import { Home, WalletCards, ChartNoAxesGantt } from "lucide-react";
 
-
 const navigation: Navigation[] = [
   { name: "Home", href: "/", icon: Home },
   { name: "Accounts", href: "/accounts", icon: WalletCards },
   { name: "Categories", href: "/categories", icon: ChartNoAxesGantt },
 ];
 
-function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   navigation.map((item) => {

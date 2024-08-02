@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "db:studio": "drizzle-kit studio",
+    "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/lib/postgres/migration.ts",
     "db:introspect": "drizzle-kit introspect"
   },
