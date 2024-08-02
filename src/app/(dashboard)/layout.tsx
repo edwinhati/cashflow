@@ -1,5 +1,6 @@
 "use client";
 
+import { trpc } from "@/utils/trpc";
 import { usePathname } from "next/navigation";
 import Header from "@/components/navigations/header";
 import Sidebar from "@/components/navigations/sidebar";
@@ -13,7 +14,7 @@ const navigation: Navigation[] = [
   { name: "Categories", href: "/categories", icon: ChartNoAxesGantt },
 ];
 
-export default function DashboardLayout({
+function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -34,3 +35,5 @@ export default function DashboardLayout({
     </div>
   );
 }
+
+export default trpc.withTRPC(DashboardLayout);

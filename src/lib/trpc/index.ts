@@ -1,10 +1,12 @@
-import { procedure, router } from "./trpc";
-
-export const appRouter = router({
-  hello: procedure.query(async () => {
-    return { greeting: "Hello, world!" };
-  }),
-});
-// Export type router type signature,
-// NOT the router itself.
-export type AppRouter = typeof appRouter;
+import { initTRPC } from "@trpc/server";
+/**
+ * Initialization of tRPC backend
+ * Should be done only once per backend!
+ */
+const t = initTRPC.create();
+/**
+ * Export reusable router and procedure helpers
+ * that can be used throughout the router
+ */
+export const router = t.router;
+export const procedure = t.procedure;
