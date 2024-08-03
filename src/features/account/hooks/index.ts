@@ -33,3 +33,45 @@ export async function findMany() {
     return [];
   }
 }
+
+export async function create({
+  name,
+  currency,
+  balance,
+}: {
+  name: string;
+  currency: {
+    name: string;
+    locale: string;
+  };
+  balance: string;
+}) {
+  const supabase = createClient();
+
+  try {
+    const { data, error: authError } = await supabase.auth.getUser();
+
+    if (authError) {
+      throw new Error(`Authentication error: ${authError.message}`);
+    }
+
+    const userId = data.user?.id;
+
+    if (!userId) {
+      throw new Error("User ID is undefined");
+    }
+
+    const newAccount = {
+      userId,
+      name,
+      currency,
+      balance,
+    };
+
+    await postgres.insert(account).values(newAccount).execute();
+    return newAccount;
+  } catch (error) {
+    console.error("Error creating account:", error);
+    throw new Error("Failed to create account");
+  }
+}
