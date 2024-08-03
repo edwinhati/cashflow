@@ -1,4 +1,3 @@
-import { columns } from "@/features/account/components/columns";
 import { DataTable } from "@/features/account/components/data-table";
 
 export default async function AccountsPage() {

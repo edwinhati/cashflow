@@ -6,6 +6,7 @@ import Header from "@/components/navigations/header";
 import Sidebar from "@/components/navigations/sidebar";
 import type { Navigation } from "@/types/navigation";
 import { Home, WalletCards, ChartNoAxesGantt } from "lucide-react";
+import { Toaster } from "@/components/ui/toaster";
 
 const navigation: Navigation[] = [
   { name: "Home", href: "/", icon: Home },
@@ -27,6 +28,7 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
         <Header pathname={pathname} navigation={navigation} />
         <main className="py-2">{children}</main>
       </div>
+      <Toaster />
     </div>
   );
 }
