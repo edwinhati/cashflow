@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { cn } from "@/utils";
+import { trpc } from "@/utils/trpc";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -48,11 +49,10 @@ const formSchema = z.object({
       message: "Currency locale must be at least 5 characters.",
     }),
   }),
-  balance: z.coerce.number(),
+  balance: z.string(),
 });
 
-export function NewAccountForm() {
-  // 1. Define your form.
+export function NewAccountForm({ onSuccess }: { onSuccess: () => void }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -61,23 +61,29 @@ export function NewAccountForm() {
         name: process.env.NEXT_PUBLIC_CURRENCY,
         locale: process.env.NEXT_PUBLIC_LOCALE,
       },
-      balance: 0,
+      balance: "0",
     },
   });
 
-  // 2. Define a submit handler.
+  const createAccount = trpc.account.create.useMutation({
+    onError: (error) => {
+      toast({
+        title: "Failed to create account",
+        description: error.message,
+      });
+    },
+    onSettled: () => {
+      form.reset();
+      toast({
+        title: "Account created",
+        description: "Your account has been created successfully",
+      });
+      onSuccess();
+    },
+  });
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      ),
-    });
-    console.log(values);
+    createAccount.mutate(values);
   }
 
   const [currencies, setCurrencies] = useState<

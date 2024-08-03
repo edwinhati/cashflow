@@ -37,9 +37,9 @@ export function DataTable<TData, TValue>() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [open, setOpen] = useState(false);
 
-  const { data, isLoading } = trpc.account.findMany.useQuery();
-
+  const { data, isLoading, refetch } = trpc.account.findMany.useQuery();
   const table = useReactTable({
     data: (data as TData[]) ?? [],
     columns: columns as ColumnDef<TData, TValue>[],
@@ -73,7 +73,7 @@ export function DataTable<TData, TValue>() {
           <AccountDialog
             title="Create a new account"
             description="Fill out the form below to create a new account."
-            content={<NewAccountForm />}
+            content={<NewAccountForm onSuccess={() => refetch()} />}
           >
             <Button size="sm" className="ml-4">
               Add Account
@@ -83,9 +83,18 @@ export function DataTable<TData, TValue>() {
         <DataTableViewOptions table={table} />
         <div className="hidden lg:block">
           <AccountSheet
+            open={open}
+            onOpenChange={setOpen}
             title="Create a new account"
             description="Fill out the form below to create a new account."
-            content={<NewAccountForm />}
+            content={
+              <NewAccountForm
+                onSuccess={() => {
+                  refetch();
+                  setOpen(false);
+                }}
+              />
+            }
           >
             <Button size="sm" className="ml-4">
               Add Account

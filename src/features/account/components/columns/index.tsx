@@ -61,7 +61,7 @@ export const columns: ColumnDef<Account>[] = [
     cell: ({ row }) => {
       const currency = row.getValue("currency") as Currency;
       const balance = parseFloat(row.getValue("balance"));
-      const formatted = new Intl.NumberFormat(currency.locales, {
+      const formatted = new Intl.NumberFormat(currency.locale, {
         style: "currency",
         currency: currency.name,
       }).format(balance);

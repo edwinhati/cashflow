@@ -26,12 +26,7 @@ export const account = pgTable("accounts", {
     .notNull()
     .references(() => user.id),
   name: text("name").notNull(),
-  currency: jsonb("currency")
-    .$type<{
-      name: string;
-      locale: string;
-    }>()
-    .notNull(),
+  currency: jsonb("currency").notNull(),
   balance: decimal("balance").notNull().default("0.0"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
