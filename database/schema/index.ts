@@ -6,6 +6,7 @@ import {
   decimal,
   timestamp,
   boolean,
+  jsonb,
 } from "drizzle-orm/pg-core";
 
 export const categoryTypeEnum = pgEnum("type", ["expense", "income"]);
@@ -27,7 +28,12 @@ export const account = pgTable("accounts", {
     .notNull()
     .references(() => user.id),
   name: text("name").notNull(),
-  currency: text("currency").notNull(),
+  currency: jsonb("currency")
+    .$type<{
+      name: string;
+      locale: string;
+    }>()
+    .notNull(),
   balance: decimal("balance").notNull().default("0.0"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),

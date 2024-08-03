@@ -1,21 +1,20 @@
 "use client";
 
+import { trpc } from "@/utils/trpc";
 import { usePathname } from "next/navigation";
 import Header from "@/components/navigations/header";
 import Sidebar from "@/components/navigations/sidebar";
 import type { Navigation } from "@/types/navigation";
-import { Home } from "lucide-react";
-
+import { Home, WalletCards, ChartNoAxesGantt } from "lucide-react";
+import { Toaster } from "@/components/ui/toaster";
 
 const navigation: Navigation[] = [
   { name: "Home", href: "/", icon: Home },
+  { name: "Accounts", href: "/accounts", icon: WalletCards },
+  { name: "Categories", href: "/categories", icon: ChartNoAxesGantt },
 ];
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   navigation.map((item) => {
@@ -29,6 +28,9 @@ export default function DashboardLayout({
         <Header pathname={pathname} navigation={navigation} />
         <main className="py-2">{children}</main>
       </div>
+      <Toaster />
     </div>
   );
 }
+
+export default trpc.withTRPC(DashboardLayout);
