@@ -33,11 +33,12 @@ import AccountDialog from "../dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function DataTable<TData, TValue>() {
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const [open, setOpen] = useState(false);
 
   const { data, isLoading, refetch } = trpc.account.findMany.useQuery();
   const table = useReactTable({
@@ -71,9 +72,18 @@ export function DataTable<TData, TValue>() {
         />
         <div className="block lg:hidden">
           <AccountDialog
+            open={sheetOpen}
+            onOpenChange={setSheetOpen}
             title="Create a new account"
             description="Fill out the form below to create a new account."
-            content={<NewAccountForm onSuccess={() => refetch()} />}
+            content={
+              <NewAccountForm
+                onSuccess={() => {
+                  refetch();
+                  setSheetOpen(false);
+                }}
+              />
+            }
           >
             <Button size="sm" className="ml-4">
               Add Account
@@ -83,15 +93,15 @@ export function DataTable<TData, TValue>() {
         <DataTableViewOptions table={table} />
         <div className="hidden lg:block">
           <AccountSheet
-            open={open}
-            onOpenChange={setOpen}
+            open={dialogOpen}
+            onOpenChange={setDialogOpen}
             title="Create a new account"
             description="Fill out the form below to create a new account."
             content={
               <NewAccountForm
                 onSuccess={() => {
                   refetch();
-                  setOpen(false);
+                  setDialogOpen(false);
                 }}
               />
             }
