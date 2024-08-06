@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
+import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
@@ -13,6 +15,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/data-table/header";
 import type { Account } from "@/features/account/types/account";
 import type { Currency } from "@/features/account/types/currency";
+import AccountDialog from "@/features/account/components/dialog";
+import AccountSheet from "@/features/account/components/sheets";
+import EditAccountForm from "@/features/account/components/forms/edit-account";
+import DeleteAccountAlert from "@/features/account/components/alerts/delete-account";
 
 export const columns: ColumnDef<Account>[] = [
   {
@@ -73,21 +79,91 @@ export const columns: ColumnDef<Account>[] = [
     id: "actions",
     header: () => null,
     cell: ({ row }) => {
-      const payment = row.original;
+      const account = row.original as Account;
 
+      const [title, setTitle] = useState<string>();
+      const [description, setDescription] = useState<string>();
+      const [sheetOpen, setSheetOpen] = useState<boolean>(false);
+      const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+      const [deleteAlertOpen, setDeleteAlertOpen] = useState<boolean>(false);
+      const [components, setComponents] = useState<
+        React.ReactElement | undefined
+      >();
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                className="sm:hidden"
+                onClick={() => {
+                  setTitle(`Edit ${account.name}`);
+                  setDescription(
+                    "Fill out the form below to edit the account."
+                  );
+                  setDialogOpen(!dialogOpen);
+                  setComponents(
+                    <EditAccountForm
+                      account={account}
+                      onSuccess={() => setDialogOpen(!dialogOpen)}
+                    />
+                  );
+                }}
+              >
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="hidden sm:block"
+                onClick={() => {
+                  setTitle(`Edit ${account.name}`);
+                  setDescription(
+                    "Fill out the form below to edit the account."
+                  );
+                  setSheetOpen(!sheetOpen);
+                  setComponents(
+                    <EditAccountForm
+                      account={account}
+                      onSuccess={() => setSheetOpen(!sheetOpen)}
+                    />
+                  );
+                }}
+              >
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setDeleteAlertOpen(!deleteAlertOpen);
+                }}
+              >
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <AccountDialog
+            open={dialogOpen}
+            onOpenChange={setDialogOpen}
+            title={`Edit ${account.name}`}
+            description="Fill out the form below to edit the account."
+            content={components || <></>}
+          />
+          <AccountSheet
+            open={sheetOpen}
+            onOpenChange={setSheetOpen}
+            title={title || ""}
+            description={description || ""}
+            content={components || <></>}
+          />
+          <DeleteAccountAlert
+            account={account}
+            open={deleteAlertOpen}
+            onOpenChange={setDeleteAlertOpen}
+          />
+        </>
       );
     },
   },

@@ -23,14 +23,14 @@ import {
 import { useState } from "react";
 import { trpc } from "@/utils/trpc";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { columns } from "@/features/account/components/columns";
+import AccountSheet from "@/features/account/components/sheets";
+import AccountDialog from "@/features/account/components/dialog";
 import { DataTablePagination } from "@/components/data-table/pagination";
 import { DataTableViewOptions } from "@/components/data-table/view-options";
-import { columns } from "../columns";
-import { Button } from "@/components/ui/button";
-import { NewAccountForm } from "../forms/new-account";
-import AccountSheet from "../sheets";
-import AccountDialog from "../dialog";
-import { Skeleton } from "@/components/ui/skeleton";
+import NewAccountForm from "@/features/account/components/forms/new-account";
 
 export function DataTable<TData, TValue>() {
   const [sheetOpen, setSheetOpen] = useState(false);

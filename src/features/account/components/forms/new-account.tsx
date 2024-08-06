@@ -52,7 +52,7 @@ const formSchema = z.object({
   balance: z.string(),
 });
 
-export function NewAccountForm({ onSuccess }: { onSuccess: () => void }) {
+export default function NewAccountForm({ onSuccess }: { onSuccess: () => void }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

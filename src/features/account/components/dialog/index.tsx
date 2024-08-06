@@ -20,7 +20,7 @@ export default function AccountDialog({
   open: boolean;
   title: string;
   description: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   content: React.ReactElement;
   onOpenChange: (open: boolean) => void;
 }) {
