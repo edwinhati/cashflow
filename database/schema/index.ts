@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   pgTable,
   pgEnum,
@@ -59,3 +60,7 @@ export const transaction = pgTable("transactions", {
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
+
+export const userRelation = relations(user, ({ many }) => ({
+  accounts: many(account),
+}));
