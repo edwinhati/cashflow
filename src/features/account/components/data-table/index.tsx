@@ -32,6 +32,7 @@ import { DataTablePagination } from "@/components/data-table/pagination";
 import { DataTableViewOptions } from "@/components/data-table/view-options";
 import NewAccountForm from "@/features/account/components/forms/new-account";
 
+
 export function DataTable<TData, TValue>() {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -39,8 +40,9 @@ export function DataTable<TData, TValue>() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-
+  
   const { data, isLoading, refetch } = trpc.account.findMany.useQuery();
+  
   const table = useReactTable({
     data: (data as TData[]) ?? [],
     columns: columns as ColumnDef<TData, TValue>[],

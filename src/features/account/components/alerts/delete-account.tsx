@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { trpc } from "@/utils/trpc";
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -13,19 +14,38 @@ import {
 import { Input } from "@/components/ui/input";
 import { buttonVariants } from "@/components/ui/button";
 import type { Account } from "@/features/account/types/account";
+import { toast } from "@/components/ui/use-toast";
 
 export default function DeleteAccountAlert({
   account,
   open,
   onOpenChange,
+  onSuccessfulDelete,
 }: {
   account: Account;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onSuccessfulDelete: () => void;
 }) {
   const [confirmName, setConfirmName] = useState<string>();
-  
+
   const isConfirmNameValid = confirmName === account?.name;
+
+  const deleteAccount = trpc.account.delete.useMutation({
+    onError: (error) => {
+      toast({
+        title: "Failed to delete account",
+        description: error.message,
+      });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Account deleted",
+        description: "Your account has been successfully deleted.",
+      });
+      onSuccessfulDelete();
+    },
+  });
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -58,6 +78,10 @@ export default function DeleteAccountAlert({
           <AlertDialogAction
             className={buttonVariants({ variant: "destructive" })}
             disabled={!isConfirmNameValid}
+            onClick={() => {
+              deleteAccount.mutate({ id: account.id });
+              onOpenChange(false);
+            }}
           >
             Delete Account
           </AlertDialogAction>

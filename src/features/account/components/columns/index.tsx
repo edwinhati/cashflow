@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from "react";
+import { trpc } from "@/utils/trpc";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
@@ -81,6 +82,8 @@ export const columns: ColumnDef<Account>[] = [
     cell: ({ row }) => {
       const account = row.original as Account;
 
+      const { refetch } = trpc.account.findMany.useQuery();
+
       const [title, setTitle] = useState<string>();
       const [description, setDescription] = useState<string>();
       const [sheetOpen, setSheetOpen] = useState<boolean>(false);
@@ -106,11 +109,14 @@ export const columns: ColumnDef<Account>[] = [
                   setDescription(
                     "Fill out the form below to edit the account."
                   );
-                  setDialogOpen(!dialogOpen);
+                  setDialogOpen(true);
                   setComponents(
                     <EditAccountForm
                       account={account}
-                      onSuccess={() => setDialogOpen(!dialogOpen)}
+                      onSuccess={() => {
+                        refetch();
+                        setDialogOpen(false);
+                      }}
                     />
                   );
                 }}
@@ -128,7 +134,10 @@ export const columns: ColumnDef<Account>[] = [
                   setComponents(
                     <EditAccountForm
                       account={account}
-                      onSuccess={() => setSheetOpen(!sheetOpen)}
+                      onSuccess={() => {
+                        refetch();
+                        setSheetOpen(false);
+                      }}
                     />
                   );
                 }}
@@ -162,6 +171,10 @@ export const columns: ColumnDef<Account>[] = [
             account={account}
             open={deleteAlertOpen}
             onOpenChange={setDeleteAlertOpen}
+            onSuccessfulDelete={() => {
+              refetch();
+              row.toggleSelected(false);
+            }}
           />
         </>
       );

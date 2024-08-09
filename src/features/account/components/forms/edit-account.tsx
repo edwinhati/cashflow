@@ -19,6 +19,7 @@ import { toast } from "@/components/ui/use-toast";
 import type { Account } from "@/features/account/types/account";
 
 const formSchema = z.object({
+  id: z.string(),
   name: z
     .string({
       required_error: "Please enter an account name.",
@@ -37,25 +38,30 @@ export default function EditAccountForm({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      id: account.id,
       name: account.name,
       balance: account.balance.toString(),
     },
   });
 
+  const updateAccount = trpc.account.update.useMutation({
+    onError: (error) => {
+      toast({
+        title: "Failed to update account",
+        description: error.message,
+      });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Account updated",
+        description: "Your account has been successfully updated.",
+      });
+      onSuccess();
+    },
+  });
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    toast({
-      title: "Account updated",
-      description: (
-        <pre>
-          <code
-            className="whitespace-pre-wrap"
-            style={{ maxWidth: "100%", overflowX: "auto" }}
-          >
-            {JSON.stringify(values, null, 2)}
-          </code>
-        </pre>
-      ),
-    });
+    updateAccount.mutate(values);
   }
 
   return (
