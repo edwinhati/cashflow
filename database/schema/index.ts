@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   pgTable,
   pgEnum,
@@ -16,8 +17,8 @@ export const user = pgTable("users", {
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
-  currency: text("currency").notNull().default("USD"),
   is_verified: boolean("is_verified").notNull().default(false),
+  currency: text("currency").notNull().default("USD"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -26,7 +27,7 @@ export const account = pgTable("accounts", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")
     .notNull()
-    .references(() => user.id),
+    .references(() => user.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   currency: jsonb("currency").notNull(),
   balance: decimal("balance").notNull().default("0.0"),
@@ -61,3 +62,14 @@ export const transaction = pgTable("transactions", {
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
+
+export const userRelation = relations(user, ({ many }) => ({
+  accounts: many(account),
+}));
+
+export const accountRelation = relations(account, ({ one }) => ({
+  user: one(user, {
+    fields: [account.id],
+    references: [user.id],
+  }),
+}));

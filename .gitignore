@@ -40,3 +40,4 @@ next-env.d.ts
 
 # Environtment Variables
 .env
+*storybook.log

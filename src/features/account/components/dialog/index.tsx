@@ -8,19 +8,24 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+// TODO: Add the following imports open setOpen
 export default function AccountDialog({
+  open,
   title,
-  description,
-  children,
   content,
+  children,
+  description,
+  onOpenChange,
 }: {
+  open: boolean;
   title: string;
   description: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   content: React.ReactElement;
+  onOpenChange: (open: boolean) => void;
 }) {
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

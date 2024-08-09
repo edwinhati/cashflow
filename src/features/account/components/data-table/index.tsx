@@ -23,23 +23,26 @@ import {
 import { useState } from "react";
 import { trpc } from "@/utils/trpc";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { columns } from "@/features/account/components/columns";
+import AccountSheet from "@/features/account/components/sheets";
+import AccountDialog from "@/features/account/components/dialog";
 import { DataTablePagination } from "@/components/data-table/pagination";
 import { DataTableViewOptions } from "@/components/data-table/view-options";
-import { columns } from "../columns";
-import { Button } from "@/components/ui/button";
-import { NewAccountForm } from "../forms/new-account";
-import AccountSheet from "../sheets";
-import AccountDialog from "../dialog";
-import { Skeleton } from "@/components/ui/skeleton";
+import NewAccountForm from "@/features/account/components/forms/new-account";
+
 
 export function DataTable<TData, TValue>() {
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const [open, setOpen] = useState(false);
-
+  
   const { data, isLoading, refetch } = trpc.account.findMany.useQuery();
+  
   const table = useReactTable({
     data: (data as TData[]) ?? [],
     columns: columns as ColumnDef<TData, TValue>[],
@@ -71,9 +74,18 @@ export function DataTable<TData, TValue>() {
         />
         <div className="block lg:hidden">
           <AccountDialog
+            open={sheetOpen}
+            onOpenChange={setSheetOpen}
             title="Create a new account"
             description="Fill out the form below to create a new account."
-            content={<NewAccountForm onSuccess={() => refetch()} />}
+            content={
+              <NewAccountForm
+                onSuccess={() => {
+                  refetch();
+                  setSheetOpen(false);
+                }}
+              />
+            }
           >
             <Button size="sm" className="ml-4">
               Add Account
@@ -83,15 +95,15 @@ export function DataTable<TData, TValue>() {
         <DataTableViewOptions table={table} />
         <div className="hidden lg:block">
           <AccountSheet
-            open={open}
-            onOpenChange={setOpen}
+            open={dialogOpen}
+            onOpenChange={setDialogOpen}
             title="Create a new account"
             description="Fill out the form below to create a new account."
             content={
               <NewAccountForm
                 onSuccess={() => {
                   refetch();
-                  setOpen(false);
+                  setDialogOpen(false);
                 }}
               />
             }
