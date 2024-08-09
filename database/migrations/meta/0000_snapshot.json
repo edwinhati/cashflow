@@ -1,5 +1,5 @@
 {
-  "id": "5c9e56fe-be4c-4f27-ab42-dd7935683b04",
+  "id": "7a0a53e7-2cbc-4567-b170-5817d6cbd855",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -29,7 +29,7 @@
         },
         "currency": {
           "name": "currency",
-          "type": "text",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": true
         },
@@ -67,7 +67,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -292,6 +292,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "is_verified": {
+          "name": "is_verified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         },
         "currency": {
           "name": "currency",

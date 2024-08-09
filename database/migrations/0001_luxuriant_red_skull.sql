@@ -1,1 +1,0 @@
-ALTER TABLE "accounts" ALTER COLUMN "currency" SET DATA TYPE jsonb;
